@@ -20,10 +20,10 @@ def new
 end
 
 def create
-  @category = Category.new(category_params)
+  @category = current_user.categories.build(category_params)
 
   if @category.save
-    render json: @category.to_json, status: :created
+    render json: @category, status: :created
   else
     render json: { errors: @category.errors.full_messages }, status: :unprocessable_entity
   end
@@ -48,7 +48,7 @@ end
 private 
 
 def set_category 
-    @category = Category.find(params[:id])
+    @category = current_user.categories.find(params[:id])
 end
 
 def category_not_found
