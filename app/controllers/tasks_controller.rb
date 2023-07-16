@@ -1,0 +1,59 @@
+class TasksController < ApplicationController
+before_action :set_category, except: [:due_today]
+before_action :set_task, only: [:show, :update, :destroy]
+
+def index
+    @tasks = @category.tasks
+    render json: @tasks.to_json
+end
+
+def show
+    render json: @task
+end
+    
+def create
+    @task = @category.tasks.build(task_params)
+
+    if @task.save
+        render json: @task, status: :created
+    else
+        render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+    end
+end
+
+def update
+    if @task.update(task_params)
+        render json: @task
+    else
+        render json: {errors: @category.errors.full_messages }, status: :unprocessable_entity
+    end
+end
+
+def destroy
+    if @task.destroy
+        render json: { message: 'Task successfully deleted'}
+    else
+        render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
+    end
+end
+
+def due_today
+  @tasks = Task.where(due_date: Date.current)
+  render json: @tasks
+end
+
+private
+
+def set_category
+    @category = Category.find(params[:category_id])
+end
+
+def task_params
+    params.require(:task).permit(:name, :body, :due_date)
+end
+
+def set_task 
+    @task = @category.tasks.find(params[:id])
+end
+
+end
