@@ -1,12 +1,16 @@
 Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
+
+  get '/auth/current' => 'auth#current'
   post '/auth/signup' => 'auth#signup'
   post '/auth/signin' => 'auth#signin'
-
-  resources :categories do
-    resources :tasks
-  end
+  post '/auth/signout' => 'auth#signout'
+  
+  
+    resources :categories do
+      resources :tasks
+    end
 
   # Routes for categories 
   get '/categories' => 'categories#index'

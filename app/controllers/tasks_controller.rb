@@ -1,6 +1,9 @@
 class TasksController < ApplicationController
+before_action :check_authentication
+before_action :set_user
 before_action :set_category, except: [:due_today]
 before_action :set_task, only: [:show, :update, :destroy]
+
 
 def index
     @tasks = @category.tasks
@@ -44,8 +47,8 @@ end
 
 private
 
-def set_category
-    @category = current_user.categories.find(params[:category_id])
+def set_category 
+    @category = @user.categories.find(params[:category_id])
 end
 
 def task_params
@@ -56,4 +59,7 @@ def set_task
     @task = @category.tasks.find(params[:id])
 end
 
+def set_user
+    @user = @current_user
+end
 end

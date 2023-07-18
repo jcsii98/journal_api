@@ -1,12 +1,13 @@
 class CategoriesController < ApplicationController
-rescue_from ActiveRecord::RecordNotFound, with: :category_not_found
 
+before_action :check_authentication
+before_action :set_user
 before_action :set_category, only: [:show, :update, :destroy]
-
+# before_action :check_authorization
 def index
-    @categories = Category.all
+    @categories = @user.categories
     
-    render json: @categories.to_json
+    render json: @categories
 end
 
 def show
@@ -20,13 +21,14 @@ def new
 end
 
 def create
-  @category = current_user.categories.build(category_params)
+    @category = Category.new(category_params)
+    @category.user_id = @current_user.id
 
-  if @category.save
-    render json: @category, status: :created
-  else
-    render json: { errors: @category.errors.full_messages }, status: :unprocessable_entity
-  end
+    if @category.save
+        render json: @category, status: :created
+    else
+        render json: { errors: @category.errors.full_messages }, status: :unprocessable_entity
+    end
 end
 
 def update
@@ -48,15 +50,23 @@ end
 private 
 
 def set_category 
-    @category = current_user.categories.find(params[:id])
+    @category = @user.categories.find(params[:id])
 end
 
-def category_not_found
-    render json: { error: 'Category not found' }, status: :not_found
-end
 
 def category_params
     params.require(:category).permit(:name)
 end
+
+def set_user
+    @user = @current_user
+end
+
+# def check_authorization
+#     unless @current_user.admin?
+#         unauthorized
+#     end
+# end
+
 
 end
