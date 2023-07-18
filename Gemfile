@@ -12,6 +12,9 @@ gem "sqlite3", "~> 1.4"
 # # postgresql
 # gem 'pg', '~> 1.5', '>= 1.5.3'
 
+# rack-cors
+gem 'rack-cors'
+
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
 
