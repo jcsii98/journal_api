@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   # Defines the root path route ("/")
+
+  root 'render#index'
   # root "articles#index"
 
   get '/auth/current' => 'auth#current'
