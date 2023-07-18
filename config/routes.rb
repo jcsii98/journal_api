@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post '/auth/signin' => 'auth#signin'
   post '/auth/signout' => 'auth#signout'
   
+  get '/user/:id' => 'users#show', as: 'show_user'
   
     resources :categories do
       resources :tasks

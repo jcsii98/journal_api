@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
+    before_action :check_authentication
     before_action :set_user
+    
     def show
         render json: @user
     end
@@ -13,5 +15,6 @@ class UsersController < ApplicationController
     def set_user
         @user = @current_user
     end
+    
 
 end
