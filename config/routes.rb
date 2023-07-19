@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   get '/auth/current' => 'auth#current'
   post '/auth/signup' => 'auth#signup'
   post '/auth/signin' => 'auth#signin'
-  post '/auth/signout' => 'auth#signout'
   
   get '/user/:id' => 'users#show', as: 'show_user'
   

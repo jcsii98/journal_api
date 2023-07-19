@@ -17,24 +17,21 @@ class AuthController < ApplicationController
     end
 
     def signin
-        if @user_token = User.get_authentication_token(signin_params)
-            render json: { token: @user_token }
+        @user_token = User.get_authentication_token(signin_params)
+
+        if @user_token
+            @user = User.find_by_authentication_token(@user_token)
+            render json: { token: @user_token, user: @user }
         else
-            render json: "no", status: 404
+            render json: { message: "Invalid credentials" }, status: :unauthorized
         end
     end
+
 
     def current
         render json: @current_user, except: [:password_digest, :token]
     end
 
-    def signout
-        if @current_user.update(token: nil)
-            render json: { signout: true }
-        else
-            render json: { error: "not found" }
-        end
-    end
 
     # def reset_password_request
     #     user = User.find_by_email(params[:email])
@@ -70,7 +67,7 @@ class AuthController < ApplicationController
     private
 
     def signup_params
-        params.require(:user).permit(:email, :password, :password_confirmation)
+        params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
     
     def signin_params 

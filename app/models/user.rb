@@ -5,6 +5,8 @@ class User < ApplicationRecord
   attr_accessor :password, :password_confirmation
   include BCrypt
 
+  validates :name, presence: true
+  
   has_many :categories
 
   attribute :token_expiration, :datetime
@@ -16,6 +18,10 @@ class User < ApplicationRecord
     @password ||= Password.new(password_digest)
   end
 
+  def self.find_by_authentication_token(token)
+    find_by(token: token)
+  end
+  
   def self.get_authentication_token(signin_params)
     current = User.find_by_email(signin_params[:email])
 

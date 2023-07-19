@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_17_100254) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_19_182401) do
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -35,6 +35,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_17_100254) do
     t.datetime "updated_at", null: false
     t.string "token"
     t.datetime "token_expiration"
+    t.string "name"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
