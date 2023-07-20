@@ -6,8 +6,8 @@ before_action :set_category, only: [:show, :update, :destroy]
 # before_action :check_authorization
 def index
     @categories = @user.categories
-    
-    render json: @categories
+    response_data = { "categories": @categories }
+    render json: response_data
 end
 
 def show
