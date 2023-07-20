@@ -7,7 +7,7 @@ class AuthController < ApplicationController
         if @user.verify_password
             
             if @user.save
-                render json: { token: @user.token }
+                render json: { token: @user.token, user: @user}
             else 
                 render json: @user.errors, status: 422
             end
