@@ -2,6 +2,7 @@ require "securerandom"
 require "bcrypt"
 
 class User < ApplicationRecord
+  validates :email, presence: true, uniqueness: true
   attr_accessor :password, :password_confirmation
   include BCrypt
 

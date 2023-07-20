@@ -5,14 +5,13 @@ class AuthController < ApplicationController
         @user = User.new(signup_params)
 
         if @user.verify_password
-            
             if @user.save
-                render json: { token: @user.token, user: @user}
-            else 
+                render json: { token: @user.token, user: @user }
+            else
                 render json: @user.errors, status: 422
             end
         else
-            render json: { error: "Confirm password invalid" }, status: 422
+            render json: { error: 'Confirm password invalid' }, status: 422
         end
     end
 
