@@ -23,7 +23,7 @@ class AuthController < ApplicationController
             @user = User.find_by_authentication_token(@user_token)
             render json: { token: @user_token, user: @user }
         else
-            render json: { message: "Invalid credentials" }, status: :unauthorized
+            render json: { message: "Invalid email or password" }, status: :unauthorized
         end
     end
 
