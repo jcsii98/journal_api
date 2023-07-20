@@ -48,7 +48,7 @@ class User < ApplicationRecord
       self.password_digest = BCrypt::Password.create(password)
     else
       errors.add(:password, "doesn't match")
-      throw(:abort)
+      false
     end
   end
 

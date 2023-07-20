@@ -12,7 +12,7 @@ class AuthController < ApplicationController
                 render json: @user.errors, status: 422
             end
         else
-            render json: { password: "doesn't match" }, status: 422
+            render json: { error: "Confirm password invalid" }, status: 422
         end
     end
 
