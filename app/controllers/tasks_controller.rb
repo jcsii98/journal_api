@@ -41,10 +41,8 @@ def destroy
 end
 
 def due_today
-  current_date = Date.parse(params[:current_date])
-
-  @tasks = Task.where(due_date: current_date)
-  render json: @tasks
+  @tasks = Task.where(due_date: Date.current)
+  render json: @tasks, include_category: true
 end
 
 private

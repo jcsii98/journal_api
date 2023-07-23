@@ -1,9 +1,14 @@
 class Task < ApplicationRecord
-    scope :due_today, -> { where(due_date: Date.current) }
-    validates :name, presence: true,
-                     uniqueness: true
+  scope :due_today, -> { where(due_date: Date.current) }
+  validates :name, presence: true,
+                   uniqueness: true
 
-    validates :body, presence: true
+  validates :body, presence: true
 
-    belongs_to :category
+  belongs_to :category
+
+  def as_json(options = {})
+    super(options.merge({ methods: [:category_id] }))
+  end
 end
+
