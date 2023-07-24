@@ -41,9 +41,18 @@ def destroy
 end
 
 def due_today
-  @tasks = Task.where(due_date: Date.current)
+  # Add 8 hours to the current time to account for the time zone difference
+  current_time_with_offset = Time.current + 8.hours
+
+  # Extract the date portion from the adjusted time (excluding the time component)
+  adjusted_date = current_time_with_offset.to_date
+
+  # Find tasks that are due today in the adjusted time zone
+  @tasks = Task.where(due_date: adjusted_date)
+
   render json: @tasks, include_category: true
 end
+
 
 private
 
