@@ -61,4 +61,8 @@ group :test do
 
   gem "simplecov"
   gem "webpacker"
+  gem 'devise_token_auth'
   end
+
+gem 'devise'
+gem 'devise_token_auth'

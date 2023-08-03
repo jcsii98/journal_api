@@ -25,5 +25,15 @@ module JournalApi
     config.api_only = true
     config.auth_token_expiration = 1.week
 
+    # cors config
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins 'http://localhost:5173/' # Replace with your React frontend's domain
+        resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head], credentials: true
+      end
+    end
+  config.middleware.delete ActionDispatch::Session::CookieStore
+
+    
   end
 end
