@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+  get '/validate_token', to: 'token_validation#validate_token'
   # Defines the root path route ("/")
   root 'render#index'
 
