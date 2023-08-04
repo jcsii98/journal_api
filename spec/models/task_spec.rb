@@ -2,91 +2,40 @@ require 'rails_helper'
 
 RSpec.describe Task, type: :model do
 
-    it "creates a task for a specific category" do
-        user = User.create(
-        email: "sample@email.com",
-        password: "password",
-        password_confirmation: "password"
-        )
-        category = user.categories.create(name: "Work")
-        task = category.tasks.create(name: "journal_api", body: "phase 1")
+  it 'has a valid factory' do
+    expect(build(:task)).to be_valid
+  end
 
-        expect(task.category).to eq(category)
-        expect(task.category_id).to eq(1)
-        expect(task.name).to eq("journal_api")
-        expect(task.body).to eq("phase 1")
-        expect(category.tasks.count).to eq(1)
-    end
+  it 'is not valid without a name' do
+    task = build(:task, name: nil)
+    expect(task).not_to be_valid
+  end
 
-    it "updates task details with valid values" do
-        user = User.create(
-        email: "sample@email.com",
-        password: "password",
-        password_confirmation: "password"
-        )
-        category = user.categories.create(name: "Work")
-        task = category.tasks.create(name: "journal_api", body: "phase 1")
-        task.update(name: "journal_api updated", body: "phase 1 updated")
+  it 'validates uniqueness of name within the scope of category_id' do
+    category = create(:category)
+    create(:task, name: 'Buy groceries', category:)
 
-        expect(task.name).to eq("journal_api updated")
-        expect(task.body).to eq("phase 1 updated")
-    end
+    task = build(:task, name: 'Buy groceries', category: category)
+    expect(task).not_to be_valid
+  end
 
-    it "deletes a task" do
-        user = User.create(
-        email: "sample@email.com",
-        password: "password",
-        password_confirmation: "password"
-        )
-        category = user.categories.create(name: "Work")
-        task = category.tasks.create(name: "journal_api", body: "phase 1")
-        task.delete
+  it 'is not valid without a body' do
+    task = build(:task, body: nil)
+    expect(task).not_to be_valid
+  end
 
-        expect(category.tasks.count).to eq(0)
-    end
+  it 'belongs to a category' do
+    category = create(:category)
+    task = create(:task, category: category)
+    expect(task.category).to eq(category)
+  end
 
+  it 'returns tasks due today' do
+    today_task = create(:task, due_date: Date.current)
+    tomorrow_task = create(:task, due_date: Date.current + 1.day)
 
-
-    #   it "updates category details" do
-#     category = Category.create(name: "Work")
-#     category.update(name: "Work Updated")
-#     expect(category.name).to eq("Work Updated")
-#   end
-
-#   it "creates a task for a specific category" do
-#     category = Category.create(name: "Work")
-#     task = category.tasks.create(name: "Task 1", body: "Do Task 1 Things")
-    
-#     expect(category.tasks.count).to eq(1)
-#     expect(task.category).to eq(category)
-#   end
-
-#   it "increments tasks count when a task is added to a category" do
-#     category = Category.create(name: "Work")
-
-#     expect {
-#       category.tasks.create(name: "Task 1", body: "Do Task 1 Things")
-#       category.tasks.create(name: "Task 2", body: "Do Task 2 Things")
-#     }.to change { category.tasks.count }.by(2)
-#   end
-  
-#   it "updates task details with valid values" do
-#     category = Category.create(name: "Work")
-    
-#     task = category.tasks.create(name: "Task 1", body: "Do Task 1 Things")
-#     task.update(name: "Task 1 Updated", body: "Do Task 1 Things Updated")
-
-#     expect(task.name).to eq("Task 1 Updated")
-#     expect(task.body).to eq("Do Task 1 Things Updated")
-#   end
-
-#     it "deletes a task" do
-#         category = Category.create(name: "Work")
-#         task = category.tasks.create(name: "Task 1", body: "Do Task 1 Things")
-#         task2 = category.tasks.create(name: "Task 2", body: "Do Task 2 Things")
-#         task.delete
-        
-#         expect(category.tasks.count).to eq(1)
-#     end
+    expect(Task.due_today).to include(today_task)
+    expect(Task.due_today).not_to include(tomorrow_task)
+  end
 
 end

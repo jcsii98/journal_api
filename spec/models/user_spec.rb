@@ -1,37 +1,32 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  it "creates a new user with valid attributes" do
-    user = User.create(
-      email: "sample@email.com",
-      password: "password",
-      password_confirmation: "password"
-    )
-
-    expect(User.count).to eq(1)
-    expect(user.email).to eq("sample@email.com")
-    expect(user.password).to eq("password")
+  it 'has a valid factory' do
+    expect(build(:user)).to be_valid
   end
 
-  it "does not save a user with invalid attributes" do
-    user = User.create(
-      email: "invalid_email",
-      password: "password",
-      password_confirmation: "passwor"
-    )
-
-    expect(User.count).to eq(0)
+  it 'is not valid without an email' do
+    user = build(:user, email: nil)
+    expect(user).not_to be_valid
   end
-  
-  it "deletes a user" do
-    user = User.create(
-      email: "sample2@email.com",
-      password: "password",
-      password_confirmation: "password"
-    )
-    user.delete
 
-    expect(User.count).to eq(0)
+  it 'is not valid without a password' do
+    user = build(:user, password: nil)
+    expect(user).not_to be_valid
   end
-  
+
+  it 'sets the uid (email) before saving' do
+    user = build(:user)
+    user.save
+
+    expect(user.uid).to eq(user.email)
+  end
+
+  it 'does not allow duplicate email (uid) for users' do
+    existing_user = create(:user)
+    new_user = build(:user, email: existing_user.email)
+
+    expect(new_user).not_to be_valid
+  end
+
 end

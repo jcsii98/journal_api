@@ -1,9 +1,8 @@
 class CategoriesController < ApplicationController
-
-before_action :check_authentication
+before_action :authenticate_user!
 before_action :set_user
 before_action :set_category, only: [:show, :update, :destroy]
-# before_action :check_authorization
+
 def index
     @categories = @user.categories
     response_data = { "categories": @categories }
@@ -53,7 +52,6 @@ def set_category
     @category = @user.categories.find(params[:id])
 end
 
-
 def category_params
     params.require(:category).permit(:name)
 end
@@ -61,12 +59,5 @@ end
 def set_user
     @user = @current_user
 end
-
-# def check_authorization
-#     unless @current_user.admin?
-#         unauthorized
-#     end
-# end
-
 
 end

@@ -1,40 +1,30 @@
 require 'rails_helper'
 
 RSpec.describe Category, type: :model do
-    it "creates a valid category" do
-        user = User.create(
-        email: "sample@email.com",
-        password: "password",
-        password_confirmation: "password"
-        )
-        category = user.categories.create(name: "Work")
-        expect(user.categories.count).to eq(1)
-        expect(category.name).to eq("Work")
-        expect(category.user_id).to eq(1)
-    end
 
-    it "updates category details" do
-        user = User.create(
-        email: "sample@email.com",
-        password: "password",
-        password_confirmation: "password"
-        )
-        category = user.categories.create(name: "Work")
-        category.update(name: "Work Updated")
+  it 'has a valid factory' do
+    expect(build(:category)).to be_valid
+  end
 
-        expect(category.name).to eq("Work Updated")
-    end
+  it 'is not valid without a name' do
+    category = build(:category, name: nil)
+    expect(category).not_to be_valid
+  end
 
-    it "deletes a category" do
-        user = User.create(
-        email: "sample@email.com",
-        password: "password",
-        password_confirmation: "password"
-        )
-        category = user.categories.create(name: "Work")
-        category.delete
+  it 'validates uniqueness of name within the scope of user_id' do
+    user = create(:user)
+    create(:category, name: 'Groceries', user: user)
+    
+    category = build(:category, name: 'Groceries', user: user)
+    expect(category).not_to be_valid
+  end
 
-        expect(user.categories.count).to eq(0)
-    end
+  it 'is valid with a unique name within the scope of user_id' do
+    user = create(:user)
+    create(:category, name: 'Groceries', user: user)
+
+    category = build(:category, name: 'Shopping', user: user)
+    expect(category).to be_valid
+  end
 
 end

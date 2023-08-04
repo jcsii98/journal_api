@@ -10,7 +10,9 @@ module JournalApi
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
-
+    config.session_store :cookie_store, key: '_interslice_session'
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use config.session_store, config.session_options
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
@@ -28,11 +30,15 @@ module JournalApi
     # cors config
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins 'http://localhost:5173/' # Replace with your React frontend's domain
-        resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head], credentials: true
+        origins '*' # Replace with your React frontend's domain
+        resource '*', 
+        headers: :any,
+        expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
+        methods: [:get, :post, :put, :patch, :delete, :options, :head], 
+        credentials: false
+
       end
     end
-  config.middleware.delete ActionDispatch::Session::CookieStore
 
     
   end

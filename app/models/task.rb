@@ -1,7 +1,7 @@
 class Task < ApplicationRecord
   scope :due_today, -> { where(due_date: Date.current) }
   validates :name, presence: true,
-                   uniqueness: true
+                   uniqueness: { scope: :category_id }
 
   validates :body, presence: true
 
