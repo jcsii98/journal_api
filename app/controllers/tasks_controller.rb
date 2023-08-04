@@ -25,12 +25,19 @@ def create
 end
 
 def update
-    if @task.update(task_params)
-        render json: @task
-    else
-        render json: {errors: @category.errors.full_messages }, status: :unprocessable_entity
-    end
+  if @task.update(task_params)
+    render json: {
+      success: true,
+      data: @task
+    }
+  else
+    render json: {
+      success: false,
+      errors: @task.errors.full_messages
+    }, status: :unprocessable_entity
+  end
 end
+
 
 def destroy
     if @task.destroy
